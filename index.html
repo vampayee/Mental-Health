@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mental Health: What Do You Really Know?</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet" />
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Raleway', sans-serif;
+    background: linear-gradient(135deg, #a1c4fd 0%, #667eea 70%, #c2e9fb 100%);
+    margin: 0;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    user-select: none;
+  }
+  #container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    max-width: 700px;
+    width: 100%;
+    padding: 30px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2.6rem;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  #intro-text {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: #444;
+    margin-bottom: 30px;
+  }
+  #name-section {
+    margin-bottom: 20px;
+  }
+  #name-input {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1.8px solid #a1c4fd;
+    outline-offset: 2px;
+    width: 100%;
+    max-width: 350px;
+    transition: border-color 0.3s ease;
+  }
+  #name-input:focus {
+    border-color: #764ba2;
+  }
+  button {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 15px;
+  }
+  button:disabled {
+    background: #b4b4b4;
+    cursor: not-allowed;
+  }
+  button:not(:disabled):hover {
+    background: linear-gradient(90deg, #764ba2, #667eea);
+  }
+
+  #quiz-section {
+    display: none;
+  }
+  #progress-bar-container {
+    width: 100%;
+    background: #d1d9ff;
+    border-radius: 12px;
+    height: 14px;
+    margin: 20px 0 10px 0;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 12px;
+    transition: width 0.4s ease;
+  }
+  #question-number {
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  #question-text {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #222;
+    margin-bottom: 20px;
+  }
+  #options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .option-btn {
+    flex: 1 1 48%;
+    min-width: 140px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 2px solid #667eea;
+    background: linear-gradient(to right, #e0f2ff, #cde7ff);
+    color: #222;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.3s ease;
+    user-select: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .option-btn:hover:not(:disabled) {
+    background-color: #d6eaff;
+  }
+  .option-btn.correct {
+    background-color: #c8facc !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+  }
+  .option-btn.wrong {
+    background-color: #ffc9c9 !important;
+    border-color: #e53935 !important;
+    color: #b71c1c !important;
+    animation: shake 0.3s;
+  }
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+  }
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  #feedback-text {
+    font-style: italic;
+    margin-top: 18px;
+    min-height: 2.2em;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #feedback-text span.emoji {
+    font-size: 1.4rem;
+  }
+  #next-btn {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 14px 32px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 25px;
+  }
+  #next-btn:disabled {
+    background-color: #9e9e9e;
+    cursor: not-allowed;
+  }
+  #final-feedback {
+    display: none;
+    margin-top: 25px;
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: #222;
+  }
+  @media (max-width: 480px) {
+    .option-btn {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="container">
+  <h1>Mental Health: What Do You Really Know?</h1>
+  <div id="intro-text">
+    Challenge your knowledge with this 20-question quiz designed to test your awareness of mental health topics. Whether you're already informed or just beginning your journey, there's always more to discover. Take a step toward reducing stigma and promoting understanding—start the quiz now.
+  </div>
+  <div id="name-section">
+    <input type="text" id="name-input" placeholder="Enter your name to start" autocomplete="off" />
+    <br />
+    <button id="start-btn" disabled>Start Quiz</button>
+  </div>
+
+  <section id="quiz-section" aria-live="polite" aria-atomic="true">
+    <div id="progress-bar-container"><div id="progress-bar"></div></div>
+    <div id="question-number"></div>
+    <div id="question-text"></div>
+    <div id="options-container"></div>
+    <div id="feedback-text" role="alert" aria-live="assertive"></div>
+    <button id="next-btn" disabled>Next</button>
+  </section>
+
+  <div id="final-feedback" role="region" aria-live="polite" aria-atomic="true"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+(() => {
+  const nameInput = document.getElementById('name-input');
+  const startBtn = document.getElementById('start-btn');
+  const introText = document.getElementById('intro-text');
+  const nameSection = document.getElementById('name-section');
+  const quizSection = document.getElementById('quiz-section');
+  const questionNumber = document.getElementById('question-number');
+  const questionText = document.getElementById('question-text');
+  const optionsContainer = document.getElementById('options-container');
+  const feedbackText = document.getElementById('feedback-text');
+  const nextBtn = document.getElementById('next-btn');
+  const progressBar = document.getElementById('progress-bar');
+  const finalFeedback = document.getElementById('final-feedback');
+
+  const correctSound = new Audio('https://cdn.pixabay.com/download/audio/2023/03/09/audio_2e4a8be8f7.mp3');
+  const wrongSound = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_d1cbf7fd10.mp3?filename=wrong-buzzer.mp3');
+  correctSound.volume = 0.15;
+  wrongSound.volume = 0.15;
+
+  const questions = [
+    {
+      question: "You catch yourself zoning out and feeling like you’re outside your body sometimes. What disorder could this point to?",
+      options: [
+        "Schizophrenia",
+        "Depersonalization/Derealization Disorder",
+        "ADHD",
+        "Bipolar Disorder"
+      ],
+      answer: "Depersonalization/Derealization Disorder",
+      feedback: "This disorder causes feelings of detachment from reality or self."
+    },
+    {
+      question: "“Regular exercise can help improve mental health symptoms.”",
+      options: ["True", "False"],
+      answer: "True",
+      feedback: "Exercise boosts mood by releasing endorphins and reducing stress."
+    },
+    {
+      question: "Which disorder involves mood episodes combined with psychotic symptoms, and is classified separately from schizophrenia and bipolar in DSM-5?",
+      options: [
+        "Schizoaffective Disorder",
+        "Cyclothymic Disorder",
+        "Major Depressive Disorder",
+        "Generalized Anxiety Disorder"
+      ],
+      answer: "Schizoaffective Disorder",
+      feedback: "It features both mood and psychotic symptoms."
+    },
+    {
+      question: "“Medications for mental illness always cause addiction or dependency.”",
+      options: ["True", "False"],
+      answer: "False",
+      feedback: "Most psychiatric medications are non-addictive and prescribed carefully."
+    },
+    {
+      question: "Which condition in DSM-5 requires symptoms lasting at least two weeks including depressed mood or loss of interest, plus other criteria?",
+      options: [
+        "Major Depressive Disorder",
+        "Bipolar Disorder",
+        "Panic Disorder",
+        "Schizoaffective Disorder"
+      ],
+      answer: "Major Depressive Disorder",
+      feedback: "Depression diagnosis requires key symptoms lasting at least 2 weeks."
+    },
+    {
+      question: "You experience recurrent panic attacks involving sudden fear, palpitations, sweating, and chest pain without obvious cause. Which ICD-11 diagnosis fits best?",
+      options: [
+        "Panic Disorder",
+        "Social Anxiety Disorder",
+        "Generalized Anxiety Disorder",
+        "PTSD"
+      ],
+      answer: "Panic Disorder",
+      feedback: "Panic disorder is characterized by unexpected panic attacks."
+    },
+    {
+      question: "“Early intervention can significantly improve outcomes for people with mental illness.”",
+      options: ["True", "False"],
+      answer: "True",
+      feedback: "Timely support often leads to better recovery."
+    },
+    {
+      question: "Which of these is a symptom of Obsessive-Compulsive Disorder (OCD)?",
+      options: [
+        "Repetitive checking or rituals",
+        "Feeling extremely tired all the time",
+        "Hearing voices",
+        "Avoiding social situations"
+      ],
+      answer: "Repetitive checking or rituals",
+      feedback: "OCD involves unwanted repetitive behaviors or thoughts."
+    },
+    {
+      question: "You’re constantly anxious, restless, and find it hard to control worrying. Which disorder fits?",
+      options: [
+        "Generalized Anxiety Disorder",
+        "Schizophrenia",
+        "PTSD",
+        "Bipolar Disorder"
+      ],
+      answer: "Generalized Anxiety Disorder",
+      feedback: "GAD features persistent anxiety and excessive worry."
+    },
+    {
+      question: "“Stress always causes mental illness.”",
+      options: ["True", "False"],
+      answer: "False",
+      feedback: "Stress can trigger but doesn’t guarantee mental illness."
+    },
+    {
+      question: "Which of these is NOT a typical symptom of social anxiety?",
+      options: [
+        "Fear of being judged",
+        "Avoidance of social situations",
+        "Hearing voices",
+        "Physical symptoms like sweating or shaking"
+      ],
+      answer: "Hearing voices",
+      feedback: "Auditory hallucinations are not typical of social anxiety."
+    },
+    {
+      question: "Which disorder is characterized by dissociative identity and memory gaps?",
+      options: [
+        "Dissociative Identity Disorder (DID)",
+        "Schizophrenia",
+        "Anxiety Disorder",
+        "Depression"
+      ],
+      answer: "Dissociative Identity Disorder (DID)",
+      feedback: "DID involves multiple distinct identities and memory loss."
+    },
+    {
+      question: "Which of the following is true regarding ICD-11?",
+      options: [
+        "It’s a global classification system by WHO for diseases including mental disorders",
+        "It’s only used in the US",
+        "It replaced the DSM-5 entirely",
+        "It doesn’t cover mental health"
+      ],
+      answer: "It’s a global classification system by WHO for diseases including mental disorders",
+      feedback: "ICD-11 is an international diagnostic tool for many diseases."
+    },
+    {
+      question: "Which of these is a key symptom of Body Dysmorphic Disorder?",
+      options: [
+        "Obsession with perceived flaws in appearance",
+        "Extreme mood swings",
+        "Hallucinations",
+        "Avoidance of social situations"
+      ],
+      answer: "Obsession with perceived flaws in appearance",
+      feedback: "BDD involves intense focus on imagined physical defects."
+    },
+    {
+      question: "“Only adults can develop serious mental illnesses.”",
+      options: ["True", "False"],
+      answer: "False",
+      feedback: "Mental illnesses can develop at any age, including childhood."
+    },
+    {
+      question: "Which bipolar disorder variant is characterized by fluctuating mood symptoms that don’t meet full criteria for hypomania or major depression?",
+      options: [
+        "Cyclothymic Disorder",
+        "Bipolar I",
+        "Major Depressive Disorder",
+        "Panic Disorder"
+      ],
+      answer: "Cyclothymic Disorder",
+      feedback: "Cyclothymia causes mild but persistent mood swings."
+    },
+    {
+      question: "Someone fears abandonment and has unstable, intense relationships. Which disorder does this describe?",
+      options: [
+        "Borderline Personality Disorder",
+        "Major Depression",
+        "OCD",
+        "Social Anxiety Disorder"
+      ],
+      answer: "Borderline Personality Disorder",
+      feedback: "BPD is marked by fear of abandonment and emotional instability."
+    },
+    {
+      question: "Which of these is a key symptom of Schizoaffective Disorder?",
+      options: [
+        "Mood episodes with psychotic symptoms",
+        "Panic attacks",
+        "Fear of social situations",
+        "Excessive worrying"
+      ],
+      answer: "Mood episodes with psychotic symptoms",
+      feedback: "Schizoaffective disorder combines mood and psychosis symptoms."
+    },
+    {
+      question: "“Support from family and community can improve recovery from mental illness.”",
+      options: ["True", "False"],
+      answer: "True",
+      feedback: "Social support is crucial for healing and wellbeing."
+    },
+    {
+      question: "Which of these statements is true?",
+      options: [
+        "Seeking help for mental health is a sign of strength",
+        "Mental illness only happens to weak people",
+        "Mental health conditions always cause violence",
+        "You can diagnose yourself accurately online"
+      ],
+      answer: "Seeking help for mental health is a sign of strength",
+      feedback: "Asking for help is a brave and positive step."
+    }
+  ];
+
+  function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  }
+
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let userName = '';
+
+  // Shuffle options for each question upfront
+  questions.forEach(q => {
+    q.shuffledOptions = shuffle([...q.options]);
+  });
+
+  nameInput.addEventListener('input', () => {
+    startBtn.disabled = nameInput.value.trim() === '';
+  });
+
+  startBtn.addEventListener('click', () => {
+    userName = nameInput.value.trim();
+    if (!userName) return;
+    nameSection.style.display = 'none';
+    introText.style.display = 'none';
+    quizSection.style.display = 'block';
+    currentQuestionIndex = 0;
+    score = 0;
+    showQuestion();
+    updateProgress();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+      showQuestion();
+      updateProgress();
+    } else {
+      showFinalFeedback();
+    }
+    nextBtn.disabled = true;
+  });
+
+  function showQuestion() {
+    feedbackText.textContent = '';
+    optionsContainer.innerHTML = '';
+    nextBtn.disabled = true;
+
+    let q = questions[currentQuestionIndex];
+    questionNumber.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+    questionText.textContent = q.question;
+
+    // Show intro text only before quiz start (hidden once quiz starts)
+    if (currentQuestionIndex === 0) {
+      introText.style.display = 'none';
+    }
+
+    // Shuffle options again for true randomness each time (optional)
+    q.shuffledOptions = shuffle([...q.options]);
+
+    q.shuffledOptions.forEach(option => {
+      const btn = document.createElement('button');
+      btn.classList.add('option-btn');
+      btn.textContent = option;
+      btn.disabled = false;
+      btn.addEventListener('click', () => handleAnswer(btn, option, q.answer, q.feedback));
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(button, selected, correct, feedback) {
+    Array.from(optionsContainer.children).forEach(btn => {
+      btn.disabled = true;
+      if (btn.textContent === correct) {
+        btn.classList.add('correct');
+      }
+    });
+
+    nextBtn.disabled = false;
+
+    if (selected === correct) {
+      button.classList.add('correct');
+      score++;
+      playSound(correctSound);
+      showFeedback(true, feedback);
+    } else {
+      button.classList.add('wrong');
+      playSound(wrongSound);
+      showFeedback(false, feedback);
+      // Shake wrong answer button
+      button.style.animation = 'shake 0.3s';
+      button.addEventListener('animationend', () => button.style.animation = '');
+    }
+  }
+
+  function showFeedback(isCorrect, text) {
+    feedbackText.innerHTML = isCorrect
+      ? `<span class="emoji">✔️</span> ${text}`
+      : `<span class="emoji">❌</span> ${text}`;
+  }
+
+  function updateProgress() {
+    let percent = ((currentQuestionIndex) / questions.length) * 100;
+    progressBar.style.width = percent + '%';
+  }
+
+  function showFinalFeedback() {
+    quizSection.style.display = 'none';
+    progressBar.style.width = '100%';
+
+    const blueHeart = '💙';
+    const finalScorePercent = Math.round((score / questions.length) * 100);
+
+    finalFeedback.innerHTML = `
+      <h2>Well done, ${userName}!</h2>
+      <p>You scored ${score} out of ${questions.length} (${finalScorePercent}%). ${blueHeart}</p>
+      <p>This quiz was designed to help raise awareness about mental health conditions and challenge stigma.</p>
+      <p>Remember, understanding and kindness make a big difference in supporting mental wellbeing.</p>
+      <p>If you want to learn more or help others, keep exploring resources and talking openly!</p>
+    `;
+    finalFeedback.style.display = 'block';
+
+    if (score >= 15) {
+      launchConfetti();
+    }
+  }
+
+  function playSound(sound) {
+    sound.currentTime = 0;
+    sound.play();
+  }
+
+  function launchConfetti() {
+    const duration = 3000;
+    const end = Date.now() + duration;
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 }
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 }
+      });
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    })();
+  }
+
+})();
+</script>
+</body>
+</html>
